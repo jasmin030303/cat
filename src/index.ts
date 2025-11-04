@@ -4,7 +4,7 @@ const server = buildServer();
 
 const startServer = () => {
   try {
-    const PORT = process.env.PORT || 3000;
+    const PORT = Number(process.env.PORT) || 3000;
 
     server.listen(
       {
