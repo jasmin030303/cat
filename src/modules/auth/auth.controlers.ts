@@ -6,7 +6,7 @@ import generateToken from "../../config/token";
 
 const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, url, age } = req.body;
+    const { name, email, password,  } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, "10");
 
@@ -14,9 +14,7 @@ const register = async (req: Request, res: Response) => {
       data: {
         name,
         email,
-        url,
-        age,
-        password: hashedPassword,
+        password,
       },
     });
     const userId = String(user.id);
