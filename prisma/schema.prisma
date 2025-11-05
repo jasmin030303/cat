@@ -22,10 +22,7 @@ model Cats {
   color     String
   name      String
   age       Int
-  image     String?
-  url       String
-  email     String
-  password  Int
+  url       String?
   price     Int?
   sale      Int        @default(0)
   createdAt DateTime   @default(now())

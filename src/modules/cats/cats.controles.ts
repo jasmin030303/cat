@@ -18,12 +18,12 @@ const getAllData = async (req: Request, res: Response) => {
 
 const postAllData = async (req: Request, res: Response) => {
   try {
-    const { name, age, url, email, password, color, sale, price, image } =
+    const { name, age, url,  color, sale, price,  } =
       req.body;
 
     const oneCat = await prisma.cats.findMany();
 
-    if (!url || !name || !color || !password || !price || !image) {
+    if (!url || !name || !color ||  !price ) {
       return res.status(400).json({
         message: "Заполните поля!",
       });
@@ -36,7 +36,6 @@ const postAllData = async (req: Request, res: Response) => {
           el.url === url &&
           el.color === color &&
           el.age === age &&
-          el.password === password &&
           el.price === price
       )
     ) {
@@ -51,8 +50,6 @@ const postAllData = async (req: Request, res: Response) => {
         name,
         age,
         url,
-        email,
-        password,
         color,
         sale,
         price,
@@ -74,7 +71,7 @@ const postAllData = async (req: Request, res: Response) => {
 const deleteData = async (req: Request, res: Response) => {
   try {
     const { catsId } = req.params;
-    const { name, age, email, url, password } = req.body;
+    const { name, age,  url, } = req.body;
     const num = await prisma.cats.delete({
       where: { id: catsId },
     });
@@ -94,15 +91,13 @@ const deleteData = async (req: Request, res: Response) => {
 const patchData = async (req: Request, res: Response) => {
   try {
     const { catsId } = req.params;
-    const { name, age, url, email, password, color, price, sale } = req.body;
+    const { name, age, url,  color, price, sale } = req.body;
     const index = await prisma.cats.update({
       where: { id: catsId },
       data: {
         name,
         age,
         url,
-        email,
-        password,
         color,
         price,
         sale,
@@ -124,15 +119,13 @@ const patchData = async (req: Request, res: Response) => {
 const upDateData = async (req: Request, res: Response) => {
   try {
     const { catsId } = req.params;
-    const { name, age, url, email, password, color, price, sale } = req.body;
+    const { name, age, url,  color, price, sale } = req.body;
     const index = await prisma.cats.update({
       where: { id: catsId },
       data: {
         name,
         age,
         url,
-        email,
-        password,
         color,
         price,
         sale,
