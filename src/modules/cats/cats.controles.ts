@@ -18,11 +18,12 @@ const getAllData = async (req: Request, res: Response) => {
 
 const postAllData = async (req: Request, res: Response) => {
   try {
-    const { name, age, url, email, password, color, sale, price } = req.body;
+    const { name, age, url, email, password, color, sale, price, image } =
+      req.body;
 
     const oneCat = await prisma.cats.findMany();
 
-    if (!url || !name || !color || !password || !price || !Image) {
+    if (!url || !name || !color || !password || !price || !image) {
       return res.status(400).json({
         message: "Заполните поля!",
       });
@@ -30,7 +31,7 @@ const postAllData = async (req: Request, res: Response) => {
 
     if (
       oneCat.every(
-        (el) =>
+        (el: any) =>
           el.name === name &&
           el.url === url &&
           el.color === color &&
