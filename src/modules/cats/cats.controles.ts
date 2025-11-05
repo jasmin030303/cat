@@ -15,6 +15,7 @@ const getAllData = async (req: Request, res: Response) => {
     });
   }
 };
+console.log("hello");
 
 const postAllData = async (req: Request, res: Response) => {
   try {
