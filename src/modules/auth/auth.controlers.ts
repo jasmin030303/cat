@@ -67,36 +67,30 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-
-
-const  sendResetCode = async (req: Request, res: Response) => {
+const sendResetCode = async (req: Request, res: Response) => {
   try {
-    
- const { email } = req.body;
+    const { email } = req.body;
     if (!email)
       return res.status(400).json({
         success: false,
         message: "Заполните email",
       });
 
- const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email } });
     if (!user)
       return res.status(404).json({
         success: false,
         message: "Пользователь не найден",
       });
 
-
- const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     await prisma.resetPassword.create({
       data: { email, code, expiresAt },
     });
 
-
-
-     const transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),
       secure: Number(process.env.SMTP_PORT) === 465,
@@ -106,44 +100,24 @@ const  sendResetCode = async (req: Request, res: Response) => {
       },
     });
 
- await transporter.sendMail({
+    await transporter.sendMail({
       from: `"Support" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Код сброса пароля",
       text: `Ваш код для сброса пароля: ${code}`,
     });
 
-
-
     res.status(200).json({
       success: true,
       message: "Код отправлен на почту",
     });
-
   } catch (error) {
-     res.status(500).json({
+    res.status(500).json({
       success: false,
       message: `${error}`,
     });
   }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
 
 const resetPassword = async (req: Request, res: Response) => {
   try {
@@ -205,9 +179,6 @@ const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
-
-
-
 const logout = async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers.authorization;
@@ -238,5 +209,5 @@ export default {
   login,
   logout,
   resetPassword,
-  sendResetCode
+  sendResetCode,
 };
