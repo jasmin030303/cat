@@ -31,6 +31,8 @@ model Cats {
 }
 
 
+
+
 model ResetPassword {
   id        String   @id @default(uuid())
   email     String
@@ -39,11 +41,16 @@ model ResetPassword {
   expiresAt DateTime
 }
 
+
+
+
 model BlacklistedToken {
   id        String   @id @default(uuid())
   token     String   @unique
   createdAt DateTime @default(now())
 }
+
+
 
 
 model Favorite {
@@ -55,3 +62,6 @@ model Favorite {
 
   @@unique([userId, catsId])
 }
+
+
+

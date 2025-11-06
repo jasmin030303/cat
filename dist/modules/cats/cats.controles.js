@@ -19,81 +19,70 @@ const getAllData = async (req, res) => {
         });
     }
 };
+console.log("hello");
 const postAllData = async (req, res) => {
     try {
-        const { name, age, url, email, password, color, sale, price, image } = req.body;
-        const oneCat = await prisma_1.default.cats.findMany();
-        if (!url || !name || !color || !password || !price || !image) {
-            return res.status(400).json({
-                message: "Заполните поля!",
-            });
-        }
-        if (oneCat.every((el) => el.name === name &&
-            el.url === url &&
-            el.color === color &&
-            el.age === age &&
-            el.password === password &&
-            el.price === price)) {
+        const { name, age, url, color, sale, price } = req.body;
+        const existingCat = await prisma_1.default.cats.findFirst({
+            where: { name },
+        });
+        if (existingCat) {
             return res.status(400).json({
                 success: false,
-                message: "Такой кот уже сушествует в списке",
+                message: "Такой кот уже существует в списке!",
             });
         }
-        const post = await prisma_1.default.cats.create({
-            data: {
-                name,
-                age,
-                url,
-                email,
-                password,
-                color,
-                sale,
-                price,
-            },
+        const newCat = await prisma_1.default.cats.create({
+            data: { name, age, url, color, sale: Number(sale) || 0, price },
         });
-        res.status(200).json({
+        return res.status(201).json({
             success: true,
-            data: post,
+            data: newCat,
         });
     }
     catch (error) {
-        res.status(500).json({
+        console.error(error);
+        return res.status(500).json({
             success: false,
             error: `Error in postAllData: ${error}`,
         });
     }
 };
-const deleteData = async (req, res) => {
+const deleteCat = async (req, res) => {
     try {
-        const { catsId } = req.params;
-        const { name, age, email, url, password } = req.body;
-        const num = await prisma_1.default.cats.delete({
+        const { catsId } = req.body;
+        if (!catsId) {
+            return res.status(400).json({
+                success: false,
+                message: "Не передан catsId",
+            });
+        }
+        const deleted = await prisma_1.default.cats.delete({
             where: { id: catsId },
         });
         res.status(200).json({
             success: true,
-            data: num,
+            message: "Кот успешно удалён",
+            data: deleted,
         });
     }
     catch (error) {
         res.status(500).json({
             success: false,
-            error: `Error in deleteData: ${error}`,
+            message: `Ошибка при удалении кота: ${error.message}`,
         });
     }
 };
 const patchData = async (req, res) => {
     try {
         const { catsId } = req.params;
-        const { name, age, url, email, password, color, price, sale } = req.body;
+        const { name, age, url, color, price, sale } = req.body;
         const index = await prisma_1.default.cats.update({
             where: { id: catsId },
             data: {
                 name,
                 age,
                 url,
-                email,
-                password,
                 color,
                 price,
                 sale,
@@ -114,15 +103,13 @@ const patchData = async (req, res) => {
 const upDateData = async (req, res) => {
     try {
         const { catsId } = req.params;
-        const { name, age, url, email, password, color, price, sale } = req.body;
+        const { name, age, url, color, price, sale } = req.body;
         const index = await prisma_1.default.cats.update({
             where: { id: catsId },
             data: {
                 name,
                 age,
                 url,
-                email,
-                password,
                 color,
                 price,
                 sale,
@@ -143,7 +130,7 @@ const upDateData = async (req, res) => {
 exports.default = {
     getAllData,
     postAllData,
-    deleteData,
+    deleteCat,
     patchData,
     upDateData,
 };
