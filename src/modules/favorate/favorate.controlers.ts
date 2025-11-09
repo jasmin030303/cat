@@ -67,13 +67,13 @@ const deleteFavorite = async (req: Request, res: Response) => {
   try {
     const { userId, catsId } = req.body;
 
-    await prisma.favorite.deleteMany({
+    const del = await prisma.favorite.deleteMany({
       where: { userId, catsId },
     });
 
     res.status(200).json({
       success: true,
-      message: "Кот успешно удалён из избранного",
+      del
     });
   } catch (error) {
     res.status(500).json({

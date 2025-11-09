@@ -1,7 +1,6 @@
 import buildServer from "./app";
 
 const server = buildServer();
-
 const startServer = () => {
   try {
     const PORT = Number(process.env.PORT) || 3000;
